@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Pulse | AI-Assisted AWS Deployment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="background-glow top-left"></div>
+    <div class="background-glow bottom-right"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="navbar">
+            <div class="brand">
+                <div class="logo-icon">☁️</div>
+                <div class="brand-text">
+                    <h1>CloudOps <span>Pulse</span></h1>
+                    <p class="subtitle">AI-Assisted AWS Web App Deployment • Project 1</p>
+                </div>
+            </div>
+            <div class="header-badges">
+                <span class="badge badge-pulse" id="health-indicator">
+                    <span class="pulse-dot"></span> System Healthy
+                </span>
+                <span class="badge badge-version">{{ telemetry.version }}</span>
+            </div>
+        </header>
+
+        <!-- Top Telemetry Row -->
+        <section class="grid-metrics">
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Environment</span>
+                    <span class="metric-icon">🌐</span>
+                </div>
+                <div class="metric-value" id="val-environment">{{ telemetry.environment }}</div>
+                <div class="metric-footer">Target: AWS EC2 Ubuntu</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Server Hostname</span>
+                    <span class="metric-icon">🖥️</span>
+                </div>
+                <div class="metric-value" id="val-hostname">{{ telemetry.hostname }}</div>
+                <div class="metric-footer" id="val-platform">{{ telemetry.platform }}</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">Uptime</span>
+                    <span class="metric-icon">⏱️</span>
+                </div>
+                <div class="metric-value" id="val-uptime">{{ telemetry.uptime }}</div>
+                <div class="metric-footer">Live Process Monitor</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-header">
+                    <span class="metric-label">CPU / Memory</span>
+                    <span class="metric-icon">⚡</span>
+                </div>
+                <div class="metric-value" id="val-resources">{{ telemetry.cpu_usage }} / {{ telemetry.memory_usage }}</div>
+                <div class="metric-footer">Telemetry snapshot</div>
+            </div>
+        </section>
+
+        <!-- Main Content Grid -->
+        <main class="main-grid">
+            <!-- Left Column: AI DevOps Incident Advisor -->
+            <section class="panel ai-panel">
+                <div class="panel-header">
+                    <div class="panel-title-group">
+                        <span class="panel-icon">🤖</span>
+                        <div>
+                            <h2>AI DevOps Incident Assistant</h2>
+                            <p class="panel-desc">Test real-world DevOps error scenarios or ask deployment questions</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Prompt Chips -->
+                <div class="chips-container">
+                    <span class="chip" onclick="quickQuery('502 Bad Gateway Nginx error')">502 Bad Gateway</span>
+                    <span class="chip" onclick="quickQuery('Address already in use port 8000')">Port Conflict</span>
+                    <span class="chip" onclick="quickQuery('Connection timed out on AWS EC2 SSH')">AWS Security Group</span>
+                    <span class="chip" onclick="quickQuery('Best practices for Docker container')">Docker Optimization</span>
+                    <span class="chip" onclick="quickQuery('Out of memory OOM killer EC2')">EC2 Swap & OOM</span>
+                </div>
+
+                <!-- Input area -->
+                <div class="ai-input-group">
+                    <input type="text" id="ai-query-input" placeholder="Type an error message, terminal log, or DevOps question..." onkeypress="handleEnter(event)">
+                    <button class="btn btn-primary" id="btn-analyze" onclick="runAiAnalysis()">
+                        <span>Analyze</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+
+                <!-- AI Output Box -->
+                <div class="ai-output" id="ai-output-box">
+                    <div class="empty-state">
+                        <div class="empty-icon">💡</div>
+                        <p>Select a scenario above or type a log snippet to trigger AI diagnostics.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: DevOps Fundamentals & Endpoints -->
+            <section class="panel devops-panel">
+                <div class="panel-header">
+                    <div class="panel-title-group">
+                        <span class="panel-icon">🛠️</span>
+                        <div>
+                            <h2>DevOps Architecture Checklist</h2>
+                            <p class="panel-desc">Core competencies covered in this AWS project</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <div class="check-item active">
+                        <span class="check-icon">✓</span>
+                        <div class="check-content">
+                            <strong>Phase 1: Local Application Core</strong>
+                            <p>Health check endpoint and live telemetry enabled.</p>
+                        </div>
+                    </div>
+
+                    <div class="check-item" id="chk-docker">
+                        <span class="check-icon">2</span>
+                        <div class="check-content">
+                            <strong>Phase 2: Docker Containerization</strong>
+                            <p>Packaged in lightweight Linux container with multi-stage build.</p>
+                        </div>
+                    </div>
+
+                    <div class="check-item" id="chk-ec2">
+                        <span class="check-icon">3</span>
+                        <div class="check-content">
+                            <strong>Phase 3: AWS EC2 Provisioning</strong>
+                            <p>VPC, Security Groups (ports 22, 80), and SSH Keypair access.</p>
+                        </div>
+                    </div>
+
+                    <div class="check-item" id="chk-nginx">
+                        <span class="check-icon">4</span>
+                        <div class="check-content">
+                            <strong>Phase 4: Nginx Reverse Proxy</strong>
+                            <p>Production server routing public HTTP (port 80) to app port 8000.</p>
+                        </div>
+                    </div>
+
+                    <div class="check-item" id="chk-cicd">
+                        <span class="check-icon">5</span>
+                        <div class="check-content">
+                            <strong>Phase 5: Automated CI/CD</strong>
+                            <p>GitHub Actions auto-deployment on every git commit.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoints-box">
+                    <h3>Essential DevOps Probes</h3>
+                    <div class="endpoint-row">
+                        <span class="method get">GET</span>
+                        <a href="/health" target="_blank" class="endpoint-link">/health</a>
+                        <span class="endpoint-desc">ALB / Kubernetes Health Probe</span>
+                    </div>
+                    <div class="endpoint-row">
+                        <span class="method get">GET</span>
+                        <a href="/api/metrics" target="_blank" class="endpoint-link">/api/metrics</a>
+                        <span class="endpoint-desc">Telemetry Data & Monitoring</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Hands-On DevOps Project 1 • Deployed with Antigravity AI</p>
+            <div class="refresh-indicator">
+                <span class="dot"></span> Auto-syncing telemetry
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function quickQuery(text) {
+            document.getElementById('ai-query-input').value = text;
+            runAiAnalysis();
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') runAiAnalysis();
+        }
+
+        async function runAiAnalysis() {
+            const input = document.getElementById('ai-query-input');
+            const query = input.value.trim();
+            const outputBox = document.getElementById('ai-output-box');
+            const btn = document.getElementById('btn-analyze');
+
+            if (!query) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<span>Analyzing...</span>';
+            outputBox.innerHTML = '<div class="loading"><div class="spinner"></div><p>Querying AI DevOps Knowledge Engine...</p></div>';
+
+            try {
+                const res = await fetch('/api/ai-analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: query })
+                });
+                const data = await res.json();
+
+                let recsHtml = '';
+                if (data.recommendations && data.recommendations.length > 0) {
+                    recsHtml = '<ul class="recs-list">' + data.recommendations.map(r => `<li>${formatCode(r)}</li>`).join('') + '</ul>';
+                }
+
+                outputBox.innerHTML = `
+                    <div class="ai-result">
+                        <div class="result-header">
+                            <h3>${data.title}</h3>
+                            <span class="timestamp">${new Date(data.timestamp).toLocaleTimeString()}</span>
+                        </div>
+                        <p class="diagnosis">${data.diagnosis}</p>
+                        <div class="rec-block">
+                            <h4>Recommended Action Steps:</h4>
+                            ${recsHtml}
+                        </div>
+                    </div>
+                `;
+            } catch (err) {
+                outputBox.innerHTML = `<div class="error-msg">⚠️ Analysis error: ${err.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>Analyze</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+            }
+        }
+
+        function formatCode(text) {
+            return text.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+        }
+
+        // Live telemetry poller
+        setInterval(async () => {
+            try {
+                const res = await fetch('/api/metrics');
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('val-uptime').textContent = data.uptime;
+                    document.getElementById('val-resources').textContent = `${data.cpu_usage} / ${data.memory_usage}`;
+                }
+            } catch (e) {
+                // quiet fail in background
+            }
+        }, 3000);
+    </script>
+</body>
+</html>

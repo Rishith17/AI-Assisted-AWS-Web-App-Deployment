@@ -1,0 +1,49 @@
+name: CI/CD Pipeline - AWS EC2 Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: 🧪 Run Tests & Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate Python Syntax & Health Check Import
+        run: |
+          python -m py_compile app.py
+          python -c "import app; print('App module verified successfully')"
+
+  deploy:
+    name: 🚀 Deploy to AWS EC2
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/aws-devops-webapp
+            git pull origin main
+            ./venv/bin/pip install -r requirements.txt
+            sudo systemctl restart devops-app
+            curl -f http://127.0.0.1/health || exit 1
