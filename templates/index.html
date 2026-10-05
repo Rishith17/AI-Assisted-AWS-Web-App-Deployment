@@ -124,40 +124,40 @@
                 </div>
 
                 <div class="checklist">
-                    <div class="check-item active">
-                        <span class="check-icon">✓</span>
+                    <div class="check-item {% if telemetry.checklist.phase1 %}active{% endif %}">
+                        <span class="check-icon">{% if telemetry.checklist.phase1 %}✓{% else %}1{% endif %}</span>
                         <div class="check-content">
                             <strong>Phase 1: Local Application Core</strong>
                             <p>Health check endpoint and live telemetry enabled.</p>
                         </div>
                     </div>
 
-                    <div class="check-item" id="chk-docker">
-                        <span class="check-icon">2</span>
+                    <div class="check-item {% if telemetry.checklist.phase2 %}active{% endif %}" id="chk-docker">
+                        <span class="check-icon">{% if telemetry.checklist.phase2 %}✓{% else %}2{% endif %}</span>
                         <div class="check-content">
                             <strong>Phase 2: Docker Containerization</strong>
                             <p>Packaged in lightweight Linux container with multi-stage build.</p>
                         </div>
                     </div>
 
-                    <div class="check-item" id="chk-ec2">
-                        <span class="check-icon">3</span>
+                    <div class="check-item {% if telemetry.checklist.phase3 %}active{% endif %}" id="chk-ec2">
+                        <span class="check-icon">{% if telemetry.checklist.phase3 %}✓{% else %}3{% endif %}</span>
                         <div class="check-content">
                             <strong>Phase 3: AWS EC2 Provisioning</strong>
                             <p>VPC, Security Groups (ports 22, 80), and SSH Keypair access.</p>
                         </div>
                     </div>
 
-                    <div class="check-item" id="chk-nginx">
-                        <span class="check-icon">4</span>
+                    <div class="check-item {% if telemetry.checklist.phase4 %}active{% endif %}" id="chk-nginx">
+                        <span class="check-icon">{% if telemetry.checklist.phase4 %}✓{% else %}4{% endif %}</span>
                         <div class="check-content">
                             <strong>Phase 4: Nginx Reverse Proxy</strong>
                             <p>Production server routing public HTTP (port 80) to app port 8000.</p>
                         </div>
                     </div>
 
-                    <div class="check-item" id="chk-cicd">
-                        <span class="check-icon">5</span>
+                    <div class="check-item {% if telemetry.checklist.phase5 %}active{% endif %}" id="chk-cicd">
+                        <span class="check-icon">{% if telemetry.checklist.phase5 %}✓{% else %}5{% endif %}</span>
                         <div class="check-content">
                             <strong>Phase 5: Automated CI/CD</strong>
                             <p>GitHub Actions auto-deployment on every git commit.</p>

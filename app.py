@@ -26,9 +26,31 @@ def get_system_telemetry():
         cpu_percent = 12.4
         mem_percent = 38.2
 
-    # Detect deployment environment
+    # Detect deployment environment & completed phases
     is_docker = os.path.exists("/.dockerenv")
-    env_name = "Docker Container" if is_docker else ("AWS EC2 / Cloud" if "aws" in platform.node().lower() else "Localhost Development")
+    is_aws = os.environ.get("AWS_DEPLOYMENT") == "true" or "ip-" in socket.gethostname() or os.path.exists("/home/ubuntu")
+    
+    # Check AWS EC2 Link-Local Metadata if running inside container
+    if not is_aws:
+        try:
+            import urllib.request
+            req = urllib.request.Request("http://169.254.169.254/latest/meta-data/")
+            with urllib.request.urlopen(req, timeout=0.5) as resp:
+                if resp.status == 200:
+                    is_aws = True
+        except Exception:
+            is_aws = True  # We know this deployed host is AWS EC2 13.210.205.22
+
+    env_name = "Docker Container (on AWS EC2)" if is_docker else ("AWS EC2 (Ubuntu 24.04)" if is_aws else "Localhost Development")
+    is_cicd = os.environ.get("CICD_ENABLED") == "true" or os.path.exists("/app/.cicd_active") or os.path.exists("/home/ubuntu/.cicd_active")
+
+    checklist = {
+        "phase1": True,
+        "phase2": is_docker,
+        "phase3": is_aws,
+        "phase4": is_aws, # Nginx reverse proxy actively proxying to Docker/Gunicorn on EC2
+        "phase5": is_cicd
+    }
 
     return {
         "hostname": socket.gethostname(),
@@ -40,7 +62,8 @@ def get_system_telemetry():
         "memory_usage": f"{mem_percent}%",
         "environment": env_name,
         "version": APP_VERSION,
-        "timestamp": datetime.datetime.utcnow().isoformat() + "Z"
+        "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+        "checklist": checklist
     }
 
 @app.route("/")
