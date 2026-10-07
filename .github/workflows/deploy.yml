@@ -30,7 +30,7 @@ jobs:
           python -c "import app; print('App module verified successfully')"
 
   deploy:
-    name: 🚀 Deploy to AWS EC2
+    name:  Deploy to AWS EC2
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
