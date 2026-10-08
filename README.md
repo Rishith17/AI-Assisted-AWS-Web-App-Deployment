@@ -13,24 +13,19 @@ An end-to-end cloud DevOps project deploying a containerized **AI DevOps Inciden
 ## 📌 Architecture Overview
 
 ```mermaid
-flowchart LR
-    User["🌐 User Browser"] -->|"Port 80 HTTP"| SG["🛡️ AWS Security Group"]
-    SG -->|"Allows 80 & 22"| EC2["☁️ AWS EC2 Instance (Ubuntu 24.04)"]
+flowchart TD
+    User["💻 User Web Browser"] -->|"Public HTTP (Port 80)"| SG["🛡️ AWS Security Group (Firewall)"]
+    SG -->|"Allowed Traffic"| Nginx["⚡ Nginx Reverse Proxy (Port 80)"]
+    Nginx -->|"Internal Loopback"| Docker["🐳 Docker Container (Port 8000)"]
     
-    subgraph Host["EC2 Host Operating System"]
-        EC2 --> Nginx["⚡ Nginx Reverse Proxy"]
-        Nginx -->|"Proxy Pass 8000"| Docker["🐳 Docker Engine"]
-        
-        subgraph AppContainer["Docker Container"]
-            Docker --> Gunicorn["🚀 Gunicorn WSGI"]
-            Gunicorn --> App["🐍 Flask Application"]
-            App --> Health["🩺 /health Probe"]
-            App --> AI["🤖 AI DevOps Engine"]
-        end
+    subgraph InsideContainer["Inside Docker Container"]
+        Docker --> Gunicorn["🚀 Gunicorn WSGI Server"]
+        Gunicorn --> App["🐍 Python Flask Web App"]
+        App --> Probes["🩺 /health & /api/metrics Probes"]
     end
 
-    GitHub["🐙 GitHub Repo"] -.->|"Git Push"| Actions["⚙️ GitHub Actions CI/CD"]
-    Actions -.->|"SSH Deploy"| EC2
+    GitHub["🐙 GitHub Repository"] -.->|"git push main"| Actions["⚙️ GitHub Actions CI/CD"]
+    Actions -.->|"Automated SSH Deploy"| Nginx
 ```
 
 ---
