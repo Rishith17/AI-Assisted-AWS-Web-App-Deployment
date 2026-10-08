@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: 🧪 Run Tests & Syntax Check
+    name:  Run Tests & Syntax Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
