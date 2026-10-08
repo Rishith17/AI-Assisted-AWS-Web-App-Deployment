@@ -10,87 +10,12 @@ An end-to-end cloud DevOps project deploying a containerized **AI DevOps Inciden
 
 ---
 
-## Architecture Box Diagram
+## Architecture Overview
 
-```text
-+-----------------------------------------------------------------------------------+
-|                                  CLIENT LAYER                                     |
-|                           [ User Web Browser / Client ]                           |
-+-----------------------------------------------------------------------------------+
-                                          |
-                                          | Public HTTP (Port 80)
-                                          v
-+-----------------------------------------------------------------------------------+
-|                            AMAZON WEB SERVICES (AWS)                              |
-|                                                                                   |
-|  +-----------------------------------------------------------------------------+  |
-|  |                    AWS SECURITY GROUP (Virtual Firewall)                    |  |
-|  |                   Inbound Rules: Port 80 (HTTP) | Port 22 (SSH)             |  |
-|  +-----------------------------------------------------------------------------+  |
-|                                         |                                         |
-|                                         v                                         |
-|  +-----------------------------------------------------------------------------+  |
-|  |                      AWS EC2 INSTANCE (Ubuntu 24.04 LTS)                    |  |
-|  |                                                                             |  |
-|  |     +-----------------------------------------------------------------+     |  |
-|  |     |                  NGINX REVERSE PROXY (Port 80)                  |     |  |
-|  |     +-----------------------------------------------------------------+     |  |
-|  |                                      |                                      |  |
-|  |                                      | Internal Proxy (127.0.0.1:8000)      |  |
-|  |                                      v                                      |  |
-|  |     +-----------------------------------------------------------------+     |  |
-|  |     |                   DOCKER CONTAINER (Port 8000)                  |     |  |
-|  |     |                                                                 |     |  |
-|  |     |       +-------------------------------------------------+       |     |  |
-|  |     |       |         GUNICORN WSGI SERVER (2 Workers)        |       |     |  |
-|  |     |       +-------------------------------------------------+       |     |  |
-|  |     |                                |                                |     |  |
-|  |     |                                v                                |     |  |
-|  |     |       +-------------------------------------------------+       |     |  |
-|  |     |       |          PYTHON FLASK WEB APPLICATION           |       |     |  |
-|  |     |       |      [ /health ]         [ /api/metrics ]       |       |     |  |
-|  |     |       +-------------------------------------------------+       |     |  |
-|  |     +-----------------------------------------------------------------+     |  |
-|  +-----------------------------------------------------------------------------+  |
-+-----------------------------------------------------------------------------------+
-                                          ^
-                                          | Automated SSH Deploy
-+-----------------------------------------------------------------------------------+
-|                                 CI/CD PIPELINE                                    |
-|          [ GitHub Repository ]  ----->  [ GitHub Actions Workflow ]               |
-+-----------------------------------------------------------------------------------+
-```
+<p align="center">
+  <img src="architecture.jpg" alt="Cloud Architecture Diagram for DevOps Web App" width="100%">
+</p>
 
-```mermaid
-graph TD
-    Client["Client Web Browser"]
-
-    subgraph AWS["Amazon Web Services (AWS)"]
-        subgraph SG["AWS Security Group (Firewall)"]
-            subgraph EC2["AWS EC2 Virtual Server (Ubuntu 24.04)"]
-                Nginx["Nginx Reverse Proxy (Port 80)"]
-                
-                subgraph Docker["Docker Container (Port 8000)"]
-                    Gunicorn["Gunicorn WSGI Server"]
-                    Flask["Python Flask Web App"]
-                    Probes["Health Probes & Telemetry"]
-                    
-                    Gunicorn --> Flask
-                    Flask --> Probes
-                end
-                
-                Nginx -->|"Proxy: Port 8000"| Gunicorn
-            end
-        end
-    end
-
-    subgraph Automation["CI/CD Automation"]
-        GitHub["GitHub Repo"] -->|"git push"| GHA["GitHub Actions"]
-    end
-
-    Client -->|"HTTP: Port 80"| SG
-    GHA -.->|"Deploy via SSH"| EC2
-```
 
 ---
 
