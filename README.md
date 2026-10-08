@@ -13,7 +13,7 @@ An end-to-end cloud DevOps project deploying a containerized **AI DevOps Inciden
 ## Architecture Overview
 
 <p align="center">
-  <img src="architecture.jpg" alt="Cloud Architecture Diagram for DevOps Web App" width="100%">
+  <img src="architecture.svg" alt="Cloud Architecture Diagram for DevOps Web App" width="100%">
 </p>
 
 

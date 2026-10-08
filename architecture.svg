@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="100%" height="100%">
+  <defs>
+    <!-- Dark Gradients & Filters -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16"/>
+      <stop offset="50%" stop-color="#0e1422"/>
+      <stop offset="100%" stop-color="#070a12"/>
+    </linearGradient>
+
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#161f30"/>
+      <stop offset="100%" stop-color="#0f1726"/>
+    </linearGradient>
+
+    <linearGradient id="ec2-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0b101d"/>
+    </linearGradient>
+
+    <linearGradient id="docker-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#102a45"/>
+      <stop offset="100%" stop-color="#091b2e"/>
+    </linearGradient>
+
+    <linearGradient id="accent-cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+
+    <linearGradient id="accent-indigo" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+
+    <!-- Arrow Marker -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+
+    <marker id="arrow-dashed" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#a855f7"/>
+    </marker>
+
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <style>
+    .title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 700; fill: #f8fafc; font-size: 24px; letter-spacing: -0.5px; }
+    .subtitle { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 400; fill: #94a3b8; font-size: 14px; }
+    .box-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 600; font-size: 15px; }
+    .box-desc { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-weight: 400; fill: #94a3b8; font-size: 12px; }
+    .badge-text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-weight: 600; font-size: 11px; fill: #38bdf8; }
+    .arrow-text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: #7dd3fc; font-weight: 500; }
+  </style>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="630" fill="url(#bg-grad)" rx="16"/>
+  <rect width="1196" height="626" x="2" y="2" fill="none" stroke="#1e293b" stroke-width="2" rx="15"/>
+
+  <!-- Header Section -->
+  <g transform="translate(60, 48)">
+    <text class="title" x="0" y="0">Cloud Architecture for DevOps Web Application</text>
+    <text class="subtitle" x="0" y="24">Production deployment on AWS EC2 featuring Docker containerization, Nginx reverse proxy, and CI/CD</text>
+  </g>
+
+  <!-- ==================== BOX 1: CLIENT ==================== -->
+  <g transform="translate(60, 150)">
+    <rect width="180" height="240" rx="12" fill="url(#card-grad)" stroke="#334155" stroke-width="1.5"/>
+    <rect width="180" height="5" rx="2" fill="#64748b"/>
+    <!-- Icon Placeholder: Laptop -->
+    <circle cx="90" cy="55" r="24" fill="#1e293b"/>
+    <path d="M 76 62 L 104 62 L 100 48 L 80 48 Z M 72 65 L 108 65 L 108 67 L 72 67 Z" fill="#94a3b8"/>
+    
+    <text class="box-title" fill="#f8fafc" x="90" y="110" text-anchor="middle">Client Layer</text>
+    <text class="box-desc" x="90" y="132" text-anchor="middle">Web Browser / User</text>
+    <text class="box-desc" x="90" y="152" text-anchor="middle">HTTP Requests</text>
+    
+    <rect x="25" y="185" width="130" height="24" rx="12" fill="#1e293b"/>
+    <text class="badge-text" x="90" y="201" text-anchor="middle">Public Traffic</text>
+  </g>
+
+  <!-- Arrow: Client -> Security Group -->
+  <g>
+    <line x1="240" y1="270" x2="315" y2="270" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="245" y="235" width="65" height="20" rx="4" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+    <text class="arrow-text" x="277" y="249" text-anchor="middle">Port 80</text>
+  </g>
+
+  <!-- ==================== BOX 2: AWS SECURITY GROUP ==================== -->
+  <g transform="translate(320, 150)">
+    <rect width="180" height="240" rx="12" fill="url(#card-grad)" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4 2"/>
+    <rect width="180" height="5" rx="2" fill="#f59e0b"/>
+    
+    <!-- Shield Icon -->
+    <circle cx="90" cy="55" r="24" fill="#3b2506"/>
+    <path d="M 90 42 L 102 47 L 102 57 C 102 65 90 70 90 70 C 90 70 78 65 78 57 L 78 47 Z" fill="#f59e0b"/>
+
+    <text class="box-title" fill="#fde68a" x="90" y="110" text-anchor="middle">Security Group</text>
+    <text class="box-desc" x="90" y="132" text-anchor="middle">AWS Cloud Firewall</text>
+    <text class="box-desc" x="90" y="152" text-anchor="middle">Inbound Filtering</text>
+
+    <rect x="25" y="185" width="130" height="24" rx="12" fill="#291b05"/>
+    <text class="badge-text" fill="#f59e0b" x="90" y="201" text-anchor="middle">Ports 80 &amp; 22</text>
+  </g>
+
+  <!-- Arrow: Security Group -> EC2 -->
+  <g>
+    <line x1="500" y1="270" x2="555" y2="270" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+    <rect x="505" y="235" width="45" height="20" rx="4" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+    <text class="arrow-text" x="527" y="249" text-anchor="middle">HTTP</text>
+  </g>
+
+  <!-- ==================== BOX 3: AWS EC2 HOST (OUTER CONTAINER) ==================== -->
+  <g transform="translate(560, 120)">
+    <rect width="580" height="300" rx="16" fill="url(#ec2-grad)" stroke="#22c55e" stroke-width="2"/>
+    <rect width="580" height="6" rx="3" fill="#22c55e"/>
+
+    <!-- EC2 Header Badge -->
+    <rect x="20" y="18" width="230" height="26" rx="6" fill="#14532d"/>
+    <text font-family="-apple-system, sans-serif" font-weight="700" font-size="12px" fill="#86efac" x="135" y="35" text-anchor="middle">
+      AWS EC2 Instance (Ubuntu 24.04 LTS)
+    </text>
+
+    <!-- NGINX SUB-BOX -->
+    <g transform="translate(20, 65)">
+      <rect width="180" height="205" rx="10" fill="#13231b" stroke="#15803d" stroke-width="1.5"/>
+      <circle cx="90" cy="40" r="20" fill="#052e16"/>
+      <text font-family="sans-serif" font-weight="900" font-size="18px" fill="#4ade80" x="90" y="47" text-anchor="middle">N</text>
+      
+      <text class="box-title" fill="#86efac" x="90" y="85" text-anchor="middle">Nginx</text>
+      <text class="box-desc" x="90" y="105" text-anchor="middle">Reverse Proxy</text>
+      <text class="box-desc" x="90" y="123" text-anchor="middle">Port 80 Listener</text>
+      <text class="box-desc" x="90" y="141" text-anchor="middle">Gzip Compression</text>
+
+      <rect x="25" y="160" width="130" height="22" rx="11" fill="#052e16"/>
+      <text class="badge-text" fill="#4ade80" x="90" y="175" text-anchor="middle">127.0.0.1:8000</text>
+    </g>
+
+    <!-- Internal Arrow: Nginx -> Docker Container -->
+    <g>
+      <line x1="200" y1="170" x2="235" y2="170" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+    </g>
+
+    <!-- DOCKER CONTAINER SUB-BOX -->
+    <g transform="translate(240, 65)">
+      <rect width="315" height="205" rx="10" fill="url(#docker-grad)" stroke="#0284c7" stroke-width="1.5"/>
+      
+      <!-- Docker Header -->
+      <g transform="translate(15, 12)">
+        <text font-family="-apple-system, sans-serif" font-weight="700" font-size="13px" fill="#7dd3fc">Docker Container (Port 8000)</text>
+      </g>
+
+      <!-- App Component 1: Gunicorn -->
+      <g transform="translate(15, 42)">
+        <rect width="285" height="65" rx="8" fill="#0c2238" stroke="#0369a1" stroke-width="1"/>
+        <text class="box-title" fill="#e0f2fe" x="15" y="26">Gunicorn WSGI Server</text>
+        <text class="box-desc" x="15" y="48">Pre-forked Python Workers (2 Workers)</text>
+      </g>
+
+      <!-- App Component 2: Flask App -->
+      <g transform="translate(15, 120)">
+        <rect width="285" height="65" rx="8" fill="#0c2238" stroke="#0369a1" stroke-width="1"/>
+        <text class="box-title" fill="#e0f2fe" x="15" y="26">Python Flask Application</text>
+        <text class="box-desc" x="15" y="48">Health Probes (/health) &amp; AI Advisor</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ==================== BOX 4: CI/CD AUTOMATION ==================== -->
+  <g transform="translate(320, 480)">
+    <rect width="420" height="95" rx="12" fill="url(#card-grad)" stroke="#a855f7" stroke-width="1.5"/>
+    <rect width="420" height="5" rx="2" fill="#a855f7"/>
+
+    <!-- GitHub Actions Icon & Title -->
+    <text class="box-title" fill="#e9d5ff" x="25" y="36">GitHub Actions (CI/CD Pipeline)</text>
+    <text class="box-desc" x="25" y="58">Automated workflow: Syntax Linting + SSH Deploy to EC2</text>
+    <text class="box-desc" x="25" y="76">Trigger: Push to 'main' branch</text>
+
+    <!-- Branch Connection to EC2 -->
+    <path d="M 420 48 L 520 48 L 520 -40 L 555 -40" fill="none" stroke="#a855f7" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow-dashed)"/>
+    <rect x="440" y="28" width="70" height="18" rx="4" fill="#2e1065"/>
+    <text font-family="ui-monospace, monospace" font-size="10px" fill="#d8b4fe" x="475" y="41" text-anchor="middle">SSH Deploy</text>
+  </g>
+</svg>
