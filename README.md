@@ -1,4 +1,4 @@
-# ☁️ AI-Assisted AWS Web App Deployment (DevOps Project 1)
+# AI-Assisted AWS Web App Deployment (DevOps Project 1)
 
 [![AWS EC2](https://img.shields.io/badge/AWS-EC2%20Ubuntu%2024.04-orange?logo=amazon-aws)](https://aws.amazon.com/)
 [![Docker](https://img.shields.io/badge/Docker-Containerized-blue?logo=docker)](https://www.docker.com/)
@@ -10,42 +10,42 @@ An end-to-end cloud DevOps project deploying a containerized **AI DevOps Inciden
 
 ---
 
-## 📌 Architecture Overview
+## Architecture Overview
 
 ```mermaid
 flowchart TD
-    User["💻 User Web Browser"] -->|"Public HTTP (Port 80)"| SG["🛡️ AWS Security Group (Firewall)"]
-    SG -->|"Allowed Traffic"| Nginx["⚡ Nginx Reverse Proxy (Port 80)"]
-    Nginx -->|"Internal Loopback"| Docker["🐳 Docker Container (Port 8000)"]
+    User["Client Web Browser"] -->|"Public HTTP (Port 80)"| SG["AWS Security Group Firewall"]
+    SG -->|"Allowed Traffic"| Nginx["Nginx Reverse Proxy (Port 80)"]
+    Nginx -->|"Internal Loopback"| Docker["Docker Container (Port 8000)"]
     
     subgraph InsideContainer["Inside Docker Container"]
-        Docker --> Gunicorn["🚀 Gunicorn WSGI Server"]
-        Gunicorn --> App["🐍 Python Flask Web App"]
-        App --> Probes["🩺 /health & /api/metrics Probes"]
+        Docker --> Gunicorn["Gunicorn WSGI Server"]
+        Gunicorn --> App["Python Flask Web App"]
+        App --> Probes["Health & Telemetry Probes"]
     end
 
-    GitHub["🐙 GitHub Repository"] -.->|"git push main"| Actions["⚙️ GitHub Actions CI/CD"]
+    GitHub["GitHub Repository"] -.->|"git push main"| Actions["GitHub Actions CI/CD"]
     Actions -.->|"Automated SSH Deploy"| Nginx
 ```
 
 ---
 
-## 🧰 Necessary Tools & Prerequisites
+## Necessary Tools and Prerequisites
 
 Before starting, ensure you have the following installed or accessible:
 
 | Tool | Version / Type | Purpose |
 | :--- | :--- | :--- |
-| **AWS Account** | Free Tier Eligible | To provision EC2 compute instances |
-| **Git** | 2.x+ | Version control and remote repository sync |
+| **AWS Account** | Free Tier Eligible | Provision EC2 compute instances |
+| **Git** | 2.x+ | Version control and remote repository synchronization |
 | **Python** | 3.10+ / 3.11 | Application programming runtime |
 | **Docker & Docker Desktop** | Latest | Containerization and image builds |
-| **OpenSSH / PowerShell** | Built-in | Connecting to remote cloud servers via `.pem` keys |
-| **GitHub Account** | Free | Hosting the repo and running GitHub Actions CI/CD |
+| **OpenSSH / PowerShell** | Built-in | Connecting to remote cloud servers via private key |
+| **GitHub Account** | Free | Hosting repository and running GitHub Actions CI/CD |
 
 ---
 
-## 📂 Project File Structure Explained
+## Project File Structure
 
 ```text
 aws-devops-webapp/
@@ -53,21 +53,21 @@ aws-devops-webapp/
 │   └── workflows/
 │       └── deploy.yml          # Automated CI/CD pipeline (Tests + SSH auto-deploy)
 ├── templates/
-│   └── index.html              # Modern dark-mode dashboard with live telemetry
+│   └── index.html              # Dashboard interface with live telemetry
 ├── static/
-│   └── style.css               # Glassmorphism design and responsive layout
-├── app.py                      # Main Flask application, health probes & AI engine
+│   └── style.css               # Styling and responsive layout
+├── app.py                      # Flask application, health probes & AI engine
 ├── requirements.txt            # Python dependencies (flask, gunicorn, psutil, requests)
 ├── Dockerfile                  # Production container definition (non-root security)
-├── .dockerignore               # Prevents cache & git clutter from entering container
-├── nginx.conf                  # Reverse proxy config (Port 80 -> Port 8000)
+├── .dockerignore               # Excludes cache and git files from container
+├── nginx.conf                  # Reverse proxy configuration (Port 80 -> Port 8000)
 ├── devops-app.service          # Linux Systemd unit file for auto-restart resilience
 └── deploy.sh                   # Single-command automated EC2 bootstrap script
 ```
 
 ---
 
-## 🚀 Step-by-Step Hands-On Guide
+## Step-by-Step Hands-On Guide
 
 ### Step 1: Run and Verify Locally
 
@@ -116,15 +116,15 @@ aws-devops-webapp/
 
 ### Step 3: Launch AWS EC2 Cloud Server
 
-1. Log into the **AWS Management Console** → Navigate to **EC2** → Click **Launch Instance**.
+1. Log into the **AWS Management Console** -> Navigate to **EC2** -> Click **Launch Instance**.
 2. Configure instance settings:
    * **Name:** `devops-server`
    * **AMI:** `Ubuntu Server 24.04 LTS` (Free Tier eligible)
    * **Instance Type:** `t2.micro` or `t3.micro` (Free Tier eligible)
    * **Key Pair:** Create a new RSA `.pem` key pair and download it (e.g., `oct5.pem`).
    * **Network Settings (Firewall / Security Group):**
-     * ✅ **Allow SSH traffic from anywhere** (Port `22`)
-     * ✅ **Allow HTTP traffic from the internet** (Port `80`)
+     * Allow SSH traffic from anywhere (Port `22`)
+     * Allow HTTP traffic from the internet (Port `80`)
 3. Click **Launch Instance**.
 
 ---
@@ -156,24 +156,24 @@ aws-devops-webapp/
    ```
 
 5. **Test in your browser:**
-   Open: `http://<YOUR-EC2-PUBLIC-IP>` (All 5 DevOps phases will show green and active!).
+   Open: `http://<YOUR-EC2-PUBLIC-IP>` (All 5 DevOps phases will show active).
 
 ---
 
 ### Step 5: Automate with GitHub Actions (CI/CD)
 
-1. Open your GitHub repository → Go to **Settings** → **Secrets and variables** → **Actions**.
+1. Open your GitHub repository -> Go to **Settings** -> **Secrets and variables** -> **Actions**.
 2. Add the following **Repository Secrets**:
    * `EC2_HOST`: Your instance's Public IPv4 address.
    * `EC2_SSH_KEY`: The entire content of your `.pem` private key file.
 3. Every time you push a commit to `main`, GitHub Actions automatically:
    * Lints and validates Python code syntax.
    * Connects to your EC2 server over SSH.
-   * Pulls the latest code and restarts the container with zero downtime!
+   * Pulls the latest code and restarts the container with zero downtime.
 
 ---
 
-## 🩺 Essential DevOps Probes
+## Essential DevOps Probes
 
 * **`/health`**: Returns JSON `{"status": "HEALTHY", "uptime_seconds": 120}`. Used by AWS Application Load Balancers (ALB) and Kubernetes readiness probes.
 * **`/api/metrics`**: Exposes real-time CPU utilization, RAM usage, cloud hostname, and container environment state.
@@ -181,19 +181,19 @@ aws-devops-webapp/
 
 ---
 
-## 🛠️ Quick Troubleshooting Guide
+## Quick Troubleshooting Guide
 
 | Issue | Quick Diagnosis | Solution |
 | :--- | :--- | :--- |
-| **502 Bad Gateway** | Nginx cannot talk to backend port 8000 | `sudo docker ps` → `sudo docker restart devops-container` |
+| **502 Bad Gateway** | Nginx cannot talk to backend port 8000 | `sudo docker ps` -> `sudo docker restart devops-container` |
 | **SSH Timeout on Port 22** | EC2 was stopped or IP changed | Check AWS Console: ensure instance is **Running** and verify new Public IPv4 |
 | **Permission Denied (SSH key)** | Key permissions are too open | Windows: `icacls key.pem /grant:r "$($env:USERNAME):(R)"`<br>Linux/Mac: `chmod 400 key.pem` |
-| **Port 8000 Conflict** | Another process is using port 8000 | `sudo lsof -i :8000` → `sudo kill -9 <PID>` |
+| **Port 8000 Conflict** | Another process is using port 8000 | `sudo lsof -i :8000` -> `sudo kill -9 <PID>` |
 | **Process Killed (OOM)** | Ran out of RAM on `t2.micro` | Enable a 2GB Swapfile: `sudo fallocate -l 2G /swapfile && sudo swapon /swapfile` |
 
 ---
 
-## 👤 Author & Acknowledgments
+## Author & Acknowledgments
 
 * **Project Owner:** [Rishith17](https://github.com/Rishith17)
-* **DevOps Focus:** AWS, Docker, Nginx, CI/CD Automation & AI Incident Diagnosis.
+* **DevOps Focus:** AWS, Docker, Nginx, CI/CD Automation & Incident Diagnosis.
