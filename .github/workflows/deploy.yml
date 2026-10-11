@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name:  Run Tests & Syntax Check
+    name: Run Tests & Syntax Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -30,12 +30,24 @@ jobs:
           python -c "import app; print('App module verified successfully')"
 
   deploy:
-    name:  Deploy to AWS EC2
+    name: Deploy to AWS EC2
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
+      - name: Check Deployment Credentials
+        id: check_creds
+        run: |
+          if [ -z "${{ secrets.EC2_HOST }}" ] || [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "configured=false" >> $GITHUB_OUTPUT
+            echo "Notice: EC2_HOST or EC2_SSH_KEY secrets not configured yet in GitHub Settings. Skipping remote SSH step."
+          else
+            echo "configured=true" >> $GITHUB_OUTPUT
+            echo "Credentials detected. Proceeding with automated deployment."
+          fi
+
       - name: Deploy via SSH
+        if: steps.check_creds.outputs.configured == 'true'
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -44,6 +56,8 @@ jobs:
           script: |
             cd /home/ubuntu/aws-devops-webapp
             git pull origin main
-            ./venv/bin/pip install -r requirements.txt
-            sudo systemctl restart devops-app
+            sudo docker build -t cloudops-pulse:v1 .
+            sudo docker rm -f devops-container || true
+            sudo docker run -d --name devops-container --restart always -p 8000:8000 -e AWS_DEPLOYMENT=true -e CICD_ENABLED=true cloudops-pulse:v1
+            sleep 2
             curl -f http://127.0.0.1/health || exit 1
